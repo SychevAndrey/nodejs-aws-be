@@ -8,7 +8,7 @@ export const getProduct: APIGatewayProxyHandler = async (event, _context) => {
 		({ id }) => event.pathParameters.productId === id
 	);
 
-	if (product !== null || product !== undefined) {
+	if (product !== null && product !== undefined) {
 		return {
 			statusCode: 200,
 			headers: {
@@ -26,6 +26,6 @@ export const getProduct: APIGatewayProxyHandler = async (event, _context) => {
 			'Access-Control-Allow-Origin': 'https://d2tvnqhil9jwg2.cloudfront.net',
 			'Access-Control-Allow-Methods': 'GET',
 		},
-		body: JSON.stringify(`Product with ID:${productId} is not found`, null, 2),
+		body: JSON.stringify(`Product with ID:${productId} is not found`),
 	};
 };
