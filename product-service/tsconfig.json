@@ -1,10 +1,10 @@
 {
 	"compilerOptions": {
 		"lib": ["es2017"],
-		"removeComments": true,
+		"removeComments": false,
 		"moduleResolution": "node",
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
 		"sourceMap": true,
 		"target": "es2017",
 		"outDir": "lib",

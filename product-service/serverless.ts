@@ -40,6 +40,17 @@ const serverlessConfiguration: Serverless = {
 				},
 			],
 		},
+		getProduct: {
+			handler: 'handler.getProduct',
+			events: [
+				{
+					http: {
+						method: 'get',
+						path: 'products/{productId}',
+					},
+				},
+			],
+		},
 	},
 };
 
