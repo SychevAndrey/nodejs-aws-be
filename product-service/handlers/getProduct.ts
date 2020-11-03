@@ -3,9 +3,9 @@ import 'source-map-support/register';
 import productList from '../productList.json';
 
 export const getProduct: APIGatewayProxyHandler = async (event, _context) => {
-	const { productId } = event.pathParameters;
+	const productId = event.pathParameters?.productId;
 	const product = productList.find(
-		({ id }) => event.pathParameters.productId === id
+		({ id }) => productId === id
 	);
 
 	if (product !== null && product !== undefined) {
