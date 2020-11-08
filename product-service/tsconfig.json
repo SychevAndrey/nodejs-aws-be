@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"lib": ["es2017"],
+		"removeComments": false,
+		"moduleResolution": "node",
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"sourceMap": true,
+		"target": "es2017",
+		"outDir": "lib",
+		"baseUrl": ".",
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"include": ["./**/*.ts"],
+	"exclude": [
+		"node_modules/**/*",
+		".serverless/**/*",
+		".webpack/**/*",
+		"_warmup/**/*",
+		".vscode/**/*"
+	]
+}
