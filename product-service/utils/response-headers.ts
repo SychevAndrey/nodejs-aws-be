@@ -1,15 +1,15 @@
 import "source-map-support/register";
 
 export enum HTTPMethods {
-  "GET",
-  "POST",
-  "PUT",
-  "DELETE",
-  "OPTIONS",
-  "HEAD",
-  "PATCH",
-  "TRACE",
-  "CONNECT",
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+  OPTIONS = "OPTIONS",
+  HEAD = "HEAD",
+  PATCH = "PATCH",
+  TRACE = "TRACE",
+  CONNECT = "CONNECT",
 }
 
 export const getHeaders = (
