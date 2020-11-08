@@ -21,10 +21,10 @@ export const createProduct: APIGatewayProxyHandler = async (
 
     const productId = await client.query(`
       insert into products (title, description, price) values
-      (${title}, ${description}, ${price}) returning id`);
+      ('${title}', '${description}', '${price}') returning id`);
 
     await client.query(
-      `insert into stocks (product_id, count) values (${productId}, ${count})`
+      `insert into stocks (product_id, count) values ('${productId}', ${count})`
     );
 
     return {
