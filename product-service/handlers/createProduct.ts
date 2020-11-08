@@ -39,8 +39,15 @@ export const createProduct: APIGatewayProxyHandler = async (
         2
       ),
     };
-  } catch {
-    return { statusCode: 500, body: "Error during database request executing" };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Error during database request executing",
+        error: error,
+        input: event,
+      }),
+    };
   } finally {
     client.end();
   }
