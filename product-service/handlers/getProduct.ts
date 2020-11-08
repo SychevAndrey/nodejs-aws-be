@@ -4,10 +4,8 @@ import productList from "../productList.json";
 import { getHeaders, HTTPMethods } from "../../utils/response-headers";
 
 export const getProduct: APIGatewayProxyHandler = async (event, _context) => {
-  const { productId } = event.pathParameters;
-  const product = productList.find(
-    ({ id }) => event.pathParameters.productId === id
-  );
+  const productId = event.pathParameters?.productId;
+  const product = productList.find(({ id }) => productId === id);
 
   if (!product) {
     return {
