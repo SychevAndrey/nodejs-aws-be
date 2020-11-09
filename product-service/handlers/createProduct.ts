@@ -19,20 +19,22 @@ export const createProduct: APIGatewayProxyHandler = async (
   try {
     const { title, description, price, count } = JSON.parse(body);
 
-    const productId = await client.query(`
+    const queryResult = await client.query(`
       insert into products (title, description, price) values
       ('${title}', '${description}', '${price}') returning id`);
 
+    const product = queryResult.rows[0];
+
     await client.query(
-      `insert into stocks (product_id, count) values ('${productId}', ${count})`
+      `insert into stocks (product_id, count) values ('${product.id}', ${count})`
     );
 
     return {
       statusCode: 200,
-      headers: getHeaders([HTTPMethods.GET]),
+      headers: getHeaders([HTTPMethods.POST]),
       body: JSON.stringify(
         {
-          message: `Product was successfully created with id ${productId}`,
+          message: `Product was successfully created with id ${product.id}`,
           input: event,
         },
         null,
