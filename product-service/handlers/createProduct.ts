@@ -8,7 +8,6 @@ export const createProduct: APIGatewayProxyHandler = async (
   _context
 ) => {
   const { body, httpMethod } = event;
-  let product;
 
   if (httpMethod !== HTTPMethods.POST) {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -18,13 +17,11 @@ export const createProduct: APIGatewayProxyHandler = async (
   await client.connect();
 
   try {
-    const data = JSON.parse(body);
-    const { title, description, price, count } = data;
+    const { title, description, price, count } = JSON.parse(body);
     const queryResult = await client.query(`
       insert into products (title, description, price) values
       ('${title}', '${description}', ${price}) returning *`);
-
-    product = queryResult.rows[0];
+    const product = queryResult.rows[0];
 
     await client.query(
       `insert into stocks (product_id, count) values ('${product.id}', ${count})`
