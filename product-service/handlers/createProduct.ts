@@ -7,17 +7,15 @@ export const createProduct: APIGatewayProxyHandler = async (
   event,
   _context
 ) => {
-  const { body, httpMethod } = event;
-
-  if (httpMethod !== HTTPMethods.POST) {
-    return { statusCode: 405, body: "Method Not Allowed" };
-  }
-
+  const { body } = event;
   const client = new Client(dbOptions);
   await client.connect();
 
   try {
     const { title, description, price, count } = JSON.parse(body);
+
+    await client.query("BEGIN");
+
     const queryResult = await client.query(`
       insert into products (title, description, price) values
       ('${title}', '${description}', ${price}) returning *`);
@@ -27,28 +25,30 @@ export const createProduct: APIGatewayProxyHandler = async (
       `insert into stocks (product_id, count) values ('${product.id}', ${count})`
     );
 
+    await client.query("COMMIT");
+
     return {
       statusCode: 200,
       headers: getHeaders([HTTPMethods.GET, HTTPMethods.POST], "*"),
       body: JSON.stringify(
         {
           message: `Product was successfully created with id ${product.id}`,
-          input: event,
         },
         null,
         2
       ),
     };
   } catch (error) {
+    await client.query("ROLLBACK");
+
     return {
       statusCode: 500,
       body: JSON.stringify({
         message: `Error during database request executing with`,
         error: error,
-        input: event.body,
       }),
     };
   } finally {
-    client.end();
+    await client.end();
   }
 };
