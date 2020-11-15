@@ -22,7 +22,6 @@ export const getAllProducts: APIGatewayProxyHandler = async (
       body: JSON.stringify(
         {
           products: queryResult.rows,
-          input: event,
         },
         null,
         2
