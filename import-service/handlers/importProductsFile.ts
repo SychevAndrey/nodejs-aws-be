@@ -21,6 +21,7 @@ export const importProductsFile: APIGatewayProxyHandler = async (
   const params = {
     Bucket: Settings.bucketName,
     Key: `${Settings.src}/${name}`,
+    Expires: 60,
     ContentType: "text/csv",
   };
 
