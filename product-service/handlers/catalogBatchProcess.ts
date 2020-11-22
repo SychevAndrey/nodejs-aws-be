@@ -1,6 +1,4 @@
 import { SNS } from 'aws-sdk';
-import { APIGatewayProxyHandler } from "aws-lambda";
-import { HTTPMethods, getHeaders } from "../utils/response-headers";
 import { Client } from "pg";
 import dbOptions from "../db/options";
 
@@ -24,17 +22,18 @@ export const catalogBatchProcess = async(event) => {
       const product = queryResult.rows[0];
 
       await client.query(
-        `insert into stocks (product_id, count) values ($1, $2)`, [product.id, count]
-    );
+        `insert into stocks (product_id, count) values ($1, $2)`,
+        [product.id, count]
+      );
 
       await client.query("COMMIT");
       console.log(`Product was successfully created with id ${product.id}`);
       return product;
     } catch (error) {
-        await client.query("ROLLBACK");
-        console.error(`Product creation error: ${error}`);
+      await client.query("ROLLBACK");
+      console.error(`Product creation error: ${error}`);
     } finally {
-        await client.end();
+      await client.end();
     }
   })
 
