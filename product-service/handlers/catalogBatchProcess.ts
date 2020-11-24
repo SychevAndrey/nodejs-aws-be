@@ -1,9 +1,9 @@
-import { SNS } from 'aws-sdk';
+import { SNS } from "aws-sdk";
 import { Client } from "pg";
 import dbOptions from "../db/options";
 
-export const catalogBatchProcess = async(event) => {
-  const sns = new SNS({region: 'eu-west-1'});
+export const catalogBatchProcess = async (event) => {
+  const sns = new SNS({ region: "eu-west-1" });
   const client = new Client(dbOptions);
   await client.connect();
 
@@ -16,9 +16,12 @@ export const catalogBatchProcess = async(event) => {
       }
       await client.query("BEGIN");
 
-      const queryResult = await client.query(`
+      const queryResult = await client.query(
+        `
         insert into products (title, description, price) values
-        ($1, $2, $3) returning *`, [title, description, price]);
+        ($1, $2, $3) returning *`,
+        [title, description, price]
+      );
       const product = queryResult.rows[0];
 
       await client.query(
@@ -35,17 +38,23 @@ export const catalogBatchProcess = async(event) => {
     } finally {
       await client.end();
     }
-  })
+  });
 
+  console.log(`TASKS: ${tasks}`);
   const result = await Promise.all(tasks);
-
-  if (result.filter(Boolean).length) {
-    await sns.publish({
-      Subject: 'Products created',
-      Message: JSON.stringify(result),
-      TopicArn: process.env.SNS_ARN,
-    }, (error) => {
-      if (error) console.error(error);
-    }).promise();
+  console.log(`RESULT: ${result}`);
+  if (result) {
+    await sns
+      .publish(
+        {
+          Subject: "Products created",
+          Message: JSON.stringify(result),
+          TopicArn: process.env.SNS_ARN,
+        },
+        (error) => {
+          if (error) console.error(error);
+        }
+      )
+      .promise();
   }
 };
