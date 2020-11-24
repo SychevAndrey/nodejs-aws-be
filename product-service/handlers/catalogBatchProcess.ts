@@ -40,9 +40,8 @@ export const catalogBatchProcess = async (event) => {
     }
   });
 
-  console.log(`TASKS: ${tasks}`);
-  const result = await Promise.all(tasks);
-  console.log(`RESULT: ${result}`);
+  //@ts-ignore
+  const result = await Promise.allSettled(tasks);
   if (result) {
     await sns
       .publish(
