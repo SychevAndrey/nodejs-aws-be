@@ -3,9 +3,6 @@ import type { Serverless } from "serverless/aws";
 const serverlessConfiguration: Serverless = {
   service: {
     name: "product-service",
-    // app and org for use with dashboard.serverless.com
-    // app: your-app-name,
-    // org: your-org-name,
   },
   frameworkVersion: "2",
   custom: {
@@ -15,7 +12,6 @@ const serverlessConfiguration: Serverless = {
       ignorePackages: ["pg-native"],
     },
   },
-  // Add the serverless-bundle plugin
   plugins: ["serverless-bundle", "serverless-dotenv-plugin"],
   provider: {
     name: "aws",
@@ -32,6 +28,69 @@ const serverlessConfiguration: Serverless = {
       PG_DATABASE: "${env:PG_DB}",
       PG_USERNAME: "${env:PG_USER}",
       PG_PASSWORD: "${env:PG_PASS}",
+      SQS_QUEUE: "catalogItemsQueue",
+      SNS_TOPIC: "createProductTopic",
+      SNS_ARN: {
+        Ref: "SNSTopic",
+      },
+    },
+    iamRoleStatements: [
+      {
+        Effect: "Allow",
+        Action: "sqs:*",
+        Resource: [
+          {
+            "Fn::GetAtt": ["SQSQueue", "Arn"],
+          },
+        ],
+      },
+      {
+        Effect: "Allow",
+        Action: "sns:*",
+        Resource: [
+          {
+            Ref: "SNSTopic",
+          },
+        ],
+      },
+    ],
+  },
+  resources: {
+    Outputs: {
+      SQSUrl: {
+        Value: {
+          Ref: "SQSQueue",
+        },
+      },
+      SQSArn: {
+        Value: {
+          "Fn::GetAtt": ["SQSQueue", "Arn"],
+        },
+      },
+    },
+    Resources: {
+      SQSQueue: {
+        Type: "AWS::SQS::Queue",
+        Properties: {
+          QueueName: "${self:provider.environment.SQS_QUEUE}",
+        },
+      },
+      SNSTopic: {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          TopicName: "${self:provider.environment.SNS_TOPIC}",
+        },
+      },
+      SNSSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: "${env:SNS_EMAIL}",
+          Protocol: "email",
+          TopicArn: {
+            Ref: "SNSTopic",
+          },
+        },
+      },
     },
   },
   functions: {
@@ -65,6 +124,19 @@ const serverlessConfiguration: Serverless = {
             method: "post",
             path: "products",
             cors: true,
+          },
+        },
+      ],
+    },
+    catalogBatchProcess: {
+      handler: "handler.catalogBatchProcess",
+      events: [
+        {
+          sqs: {
+            batchSize: 5,
+            arn: {
+              "Fn::GetAtt": ["SQSQueue", "Arn"],
+            },
           },
         },
       ],
