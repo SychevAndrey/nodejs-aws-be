@@ -38,6 +38,8 @@ export const basicAuthorizer = async (event, _context, callback) => {
 
     const policy = generatePolicy(encodedCreds, event.nethodArn, effect);
 
+    console.log(JSON.stringify(policy));
+
     callback(null, policy);
   } catch (e) {
     callback(`Unauthorized ${e.message}`);
