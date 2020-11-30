@@ -32,6 +32,7 @@ export const basicAuthorizer = async (event, _context, callback) => {
     console.log(`username: ${username} and password ${password}`);
 
     const storedUserPassword = process.env[username];
+    console.log(storedUserPassword);
     const effect =
       !storedUserPassword || storedUserPassword != password ? "Deny" : "Allow";
 
