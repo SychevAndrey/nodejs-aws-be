@@ -5,7 +5,7 @@ export const basicAuthorizer = async (event, _context, callback) => {
 
   const generatePolicy = (principalId, resource, effect = "Allow") => {
     return {
-      principalId: principalId,
+      principalId,
       policyDocument: {
         Version: "2012-10-17",
         Statement: [
@@ -36,7 +36,7 @@ export const basicAuthorizer = async (event, _context, callback) => {
     const effect =
       !storedUserPassword || storedUserPassword != password ? "Deny" : "Allow";
 
-    const policy = generatePolicy(encodedCreds, event.nethodArn, effect);
+    const policy = generatePolicy(encodedCreds, event.methodArn, effect);
 
     console.log(JSON.stringify(policy));
 
