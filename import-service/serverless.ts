@@ -20,9 +20,9 @@ const serverlessConfiguration: Serverless = {
     region: SETTINGS.awsRegion,
     iamRoleStatements: [
       {
-        Effect: 'Allow',
-        Action: 'sqs:*',
-        Resource: ['${cf:product-service-${self:provider.stage}.SQSArn}']
+        Effect: "Allow",
+        Action: "sqs:*",
+        Resource: ["${cf:product-service-${self:provider.stage}.SQSArn}"],
       },
       {
         Effect: "Allow",
@@ -40,7 +40,7 @@ const serverlessConfiguration: Serverless = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
-      SQS_URL: '${cf:product-service-${self:provider.stage}.SQSUrl}'
+      SQS_URL: "${cf:product-service-${self:provider.stage}.SQSUrl}",
     },
   },
   functions: {
@@ -52,6 +52,14 @@ const serverlessConfiguration: Serverless = {
             method: "get",
             path: "import",
             cors: true,
+            authorizer: {
+              name: "basicAuthorizer",
+              arn:
+                "${cf:authorization-service-${self:provider.stage}.basicAuthorizerArn}",
+              resultTtlInSeconds: 0,
+              identitySource: "method.request.header.Authorization",
+              type: "token",
+            },
             request: {
               parameters: {
                 querystrings: {
