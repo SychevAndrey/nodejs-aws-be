@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "eb-init": "eb init --platform node.js --region eu-west-1",
+    "eb-create": "eb create development --single --cname sychevandrey-bff-develop"
   },
   "dependencies": {
     "debug": "~2.6.9",
