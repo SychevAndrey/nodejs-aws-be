@@ -1,12 +1,10 @@
 const express = require('express');
-const logger = require('morgan');
 const axios = require('axios').default;
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(logger('dev'));
 app.use(express.json());
 
 app.all('/*', (req, res) => {

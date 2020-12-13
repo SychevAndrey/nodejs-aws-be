@@ -5,11 +5,10 @@
   "scripts": {
     "start": "node index.js",
     "eb-init": "eb init --platform node.js --region eu-west-1",
-    "eb-create": "eb create develop --single --cname sychevandrey-bff-develop"
+    "eb-create": "eb create develop --cname sychevandrey-bff-develop"
   },
   "dependencies": {
     "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "express": "~4.16.1"
   }
 }
