@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "eb-init": "eb init --platform node.js --region eu-west-1",
-    "eb-create": "eb create develop --cname sychevandrey-bff-develop"
+    "eb-create": "eb create develop --single --cname sychevandrey-bff-develop"
   },
   "dependencies": {
     "axios": "^0.21.0",
