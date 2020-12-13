@@ -22,7 +22,7 @@ app.all('/*', (req, res) => {
     const axiosConfig = {
       method: req.method,
       url: `${recipientURL}${req.originalUrl}`,
-      ...(Object.keys(req.body || {}).length > 0 & {data: req.body})
+      ...(Object.keys(req.body || {}).length > 0 && {data: req.body})
     };
 
     console.log('axiosConfig', axiosConfig);
