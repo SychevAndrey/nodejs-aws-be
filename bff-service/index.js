@@ -4,6 +4,13 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+let products = {
+  data: null,
+  timestamp: null,
+  valid: function() {
+    return Date.now() - this.timestamp < 120000;
+  }
+};
 
 app.use(express.json());
 
@@ -17,8 +24,11 @@ app.all('/*', (req, res) => {
 
   const recipientURL = process.env[recipient];
   console.log('recipientURL', recipientURL);
+  console.log('cache:', products.valid()); 
 
-  if (recipientURL) {
+  if (recipient === 'products' && products.data && products.valid()) {
+    res.status(200).json(products.data);
+  } else if (recipientURL) {
     const axiosConfig = {
       method: req.method,
       url: `${recipientURL}${req.originalUrl}`,
@@ -29,7 +39,9 @@ app.all('/*', (req, res) => {
 
     axios(axiosConfig)
     .then(function(response) {
-      console.log('response from recipient', response.data);
+      //console.log('response from recipient', response.data);
+      products.data = response.data;
+      products.timestamp = Date.now();
       res.json(response.data);
     })
     .catch(error => {
