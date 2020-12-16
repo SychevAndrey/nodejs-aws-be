@@ -1,0 +1,16 @@
+{
+  "name": "bff-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "eb-init": "eb init --platform node.js --region eu-west-1",
+    "eb-create": "eb create develop --single --cname sychevandrey-bff-develop"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "~4.16.1"
+  }
+}
